@@ -19,7 +19,6 @@ export const addCategory = async (req, res, next) => {
     const categoryCreated = await Category.create({ name, description, owner: _id })
     if (!categoryCreated) { return next(new Error('something went wrong', { cause: 400 })) }
 
-    req.savedDoc = { model: Category, _id: categoryCreated._id }
 
     res.status(200).json({ message: 'category added successfully', categoryCreated })
 }

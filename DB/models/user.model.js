@@ -1,6 +1,5 @@
-import { Schema, model } from "mongoose";
-import { systemRoles } from "../../src/utils/system-roles.js";
 import bcrypt from "bcryptjs"
+import { Schema, model } from "mongoose";
 
 const userSchema = new Schema({
     username: {
