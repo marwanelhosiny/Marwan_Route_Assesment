@@ -1,6 +1,7 @@
 import Task from "../../../DB/models/task.model.js";
 import Category from "../../../DB/models/category.model.js";
 import { ApiFeatures } from "../../utils/api-features.js";
+import { DateTime } from "luxon";
 
 
 
@@ -101,9 +102,21 @@ export const deleteTask = async(req, res, next) =>{
 export const getTask = async(req, res, next) =>{
     const { taskId } = req.params
 
-    // getting the task
-    const task = await Task.findOne({_id: taskId })
-    if (!task) { return next(new Error('task does not exist', { cause: 400 })) }
+    // Fetching the task
+    const task = await Task.findById(taskId);
+    if (!task) {
+        return next(new Error('Task does not exist', { cause: 400 }));
+    }
+
+    // Check if the due date is today or earlier using Luxon
+    const today = DateTime.local().startOf('day');
+    const dueDate = DateTime.fromISO(task.dueDate).startOf('day');
+
+    if (dueDate <= today) {
+        // Update the status to 'ended' if due date is today or earlier
+        task.status = 'ended';
+        await task.save();
+    }
 
     res.status(200).json({ message: 'task fetched successfully', task })
 
@@ -117,7 +130,17 @@ export const getMyTasksCategorised = async (req, res, next) => {
         const { _id } = req.authUser;
         const query = req.query;
 
-        console.log('Query Params:', query);
+        // Check if the due date is today or earlier using Luxon
+        const today = DateTime.local().startOf('day');
+        const checkTasks = await Task.find({ userId: _id, status: 'comming' });
+
+        for (const task of checkTasks) {
+            const dueDate = DateTime.fromISO(task.dueDate).startOf('day');
+            if (dueDate <= today) {
+                task.status = 'ended';
+                await task.save();
+            }
+        }
 
         let mongooseQuery = Category.find({ owner: _id }).populate({
             path: 'tasks',

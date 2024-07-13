@@ -23,7 +23,7 @@ const taskSchema = Schema({
         default: 'comming'
     },
     dueDate: {
-        type: Date
+        type: String
     },
     priority: {
         type: String,
@@ -40,7 +40,7 @@ const taskSchema = Schema({
             required: true
             },
             dueDate: {
-            type: Date,
+            type: String,
             }
         }
     ],
