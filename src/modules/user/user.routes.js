@@ -13,13 +13,9 @@ router.patch('/changePass', validationFunction(changepassSchema), auth(), expres
 router.post('/login', validationFunction(signinSchema), expressAsyncHandler(ac.signIn))
 router.post('/forgetPass', validationFunction(forgetpasswordSchema), expressAsyncHandler(ac.forgetPassword))
 router.post('/resetpass/', validationFunction(resetpassSchema), expressAsyncHandler(ac.resetPass))
+router.delete('/',auth(),expressAsyncHandler(ac.userDelete))
 
-/* router.put('/',validationFunction(userupdateSchema),auth(),expressAsyncHandler(uc.userUpdate))
-router.delete('/',auth(),expressAsyncHandler(uc.userDelete))
-router.get('/showMyData',auth(),expressAsyncHandler(uc.showMyData))
-router.get('/profile/:_id',validationFunction(showprofileSchema),expressAsyncHandler(uc.showUserProfile))
-router.post('/forgetPass',validationFunction(forgetpasswordSchema),expressAsyncHandler(uc.forgetPassword))
-router.post('/recover',validationFunction(getUsersbyrecoveryemailSchema),expressAsyncHandler(uc.getUsersByRecoveryEmail)) */
+
 
 
 

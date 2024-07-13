@@ -57,8 +57,8 @@ export const deletetaskSchema={
     })
 }
 
-export const getsubcategorySchema ={
+export const getTaskSchema={
     params:Joi.object({
-        subCategoryId:Joi.string().custom(objectidValidation)
+        taskId: Joi.string().custom(objectidValidation)
     })
 }

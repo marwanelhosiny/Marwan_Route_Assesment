@@ -52,5 +52,5 @@ userSchema.pre('save', function(){
     
 })
 
-const User = model('User', userSchema)
+const User = model('user', userSchema)
 export default User

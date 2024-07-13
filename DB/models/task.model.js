@@ -12,7 +12,7 @@ const taskSchema = Schema({
     body: {
         type: String
     },
-    visiblity:{
+    visibility:{
         type: String,
         enum: ['private', 'public'],
         default: 'public'

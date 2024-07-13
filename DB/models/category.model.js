@@ -16,6 +16,12 @@ const categorySchema = new Schema(
         toObject: { virtuals: true }
     })
 
+    categorySchema.virtual('tasks', {
+        ref: 'task',
+        localField: '_id',
+        foreignField: 'categoryId'
+    })
+
 
 
 const Category = model('category', categorySchema)

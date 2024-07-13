@@ -2,7 +2,6 @@ import User from "../../../DB/models/user.model.js"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 import generateUniequeString from "../../utils/generateUniqueString.js"
-import axios from "axios"
 import sendEmailService from "../services/send-email.service.js"
 
 //============================================== register api =======================================//
@@ -81,37 +80,6 @@ export const signIn = async (req, res, next) => {
 
 
 
-
-//=========================================== deleteUser api ======================================//
-export const userDelete = async (req, res, next) => {
-    const { _id } = req.authUser
-
-    //deleting user and returning deleted document 
-    const deleted = await User.findByIdAndDelete({ _id })
-    return res.status(200).json({ messsage: "user deleted successsfully", deleted })
-}
-
-
-//=========================================== showMyProfile api =================================//
-export const showMyData = async (req, res, next) => {
-
-    //distructing all data except password cannot send hashed pass in response even if he is account owner
-    const { _id, firstName, lastName, username, email, DOB, mobileNumber, role, status, createdAt, updatedAt } = req.authUser
-    return res.status(200).json({ _id, firstName, lastName, username, email, DOB, mobileNumber, role, status, createdAt, updatedAt })
-
-}
-
-
-//=========================================== showUserProfile api =================================//
-export const showUserProfile = async (req, res, next) => {
-    const { _id } = req.params
-
-    const findUser = await User.findById(_id, 'firstName lastName DOB role status')
-    if (!findUser) { return next(new Error('user does not exist', { cause: 400 })) }
-    return res.status(200).json({ message: `user's profile`, findUser })
-}
-
-
 //=========================================== updatePassword api ===============================//
 export const changePass = async (req, res, next) => {
     const { newPass, oldPass } = req.body
@@ -174,5 +142,22 @@ export const resetPass = async (req, res, next) => {
 
     return res.status(200).json({ message: "password updated Successfully" })
 
+}
+
+//=========================================== deleteUser ======================================== //
+
+export const deleteUser = async (req, res, next) => {
+    const { _id } = req.authUser
+
+    //deleting user and returning deleted document 
+    const deleted = await User.findByIdAndDelete({ _id })
+    if(!deleted) { return next( new Error('user does not exist', { cause:400}))}
+
+    //deleting related categories
+    const categories = await Category.deleteMany({ owner: _id })
+
+    //deleting related tasks
+    const tasks = await Task.deleteMany({ userId: _id })
+    return res.status(200).json({ messsage: "user deleted successsfully", deleted })
 }
 

@@ -1,9 +1,6 @@
 import Category from "../../../DB/models/category.model.js";
-import slugify from "slugify";
-import cloudinaryConnection from "../../utils/cloudinary.js";
-import generateUniequeString from "../../utils/generateUniqueString.js";
+
 import Task from "../../../DB/models/task.model.js";
-import { ApiFeatures } from "../../utils/api-features.js"
 
 
 
@@ -70,8 +67,7 @@ export const deleteCategory = async (req, res, next) => {
 
 
     //4- deleting related tasks
-    //const deletedSubCategories = await Task.deleteMany({ categoryId })
-    //console.log('no related subCategories')
+    const deletedTasks = await Task.deleteMany({ categoryId })
 
 
     res.status(200).json({ message: 'Category deleted successfully', deletedCategory })
